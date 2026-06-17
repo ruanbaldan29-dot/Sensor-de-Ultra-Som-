@@ -1,0 +1,51 @@
+const int trigPin = 9;
+const int echoPin = 10;
+
+const int motor1 = 5;
+const int motor2 = 6;
+
+long tempo;
+float distancia;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  pinMode(motor1, OUTPUT);
+  pinMode(motor2, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Emitir sinal de ultrassom
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Esperar pelo eco e medir o tempo
+  tempo = pulseIn(echoPin, HIGH);
+
+  // Calcular distância
+  distancia = (tempo * 0.0343) / 2;
+
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+
+  // Decisão
+  if (distancia < 20) {
+    // Parar o robô
+    digitalWrite(motor1, LOW);
+    digitalWrite(motor2, LOW);
+  } else {
+    // Continuar a andar
+    digitalWrite(motor1, HIGH);
+    digitalWrite(motor2, HIGH);
+  }
+
+  delay(100);
+}
